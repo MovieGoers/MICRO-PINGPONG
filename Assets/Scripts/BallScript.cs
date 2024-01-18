@@ -27,7 +27,7 @@ public class BallScript : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         GameObject go = collision.gameObject;
-        if (go.CompareTag("Wall") || go.CompareTag("Player"))
+        if (go.CompareTag("Wall") || go.CompareTag("Player")) // 부딪힌 면에 대한 방향 변환
         {
             if (go.transform.up.x < -0.01f || go.transform.up.x > 0.01f)
                 ballMovementVector.x *= -1;
