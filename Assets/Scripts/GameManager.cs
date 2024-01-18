@@ -26,6 +26,13 @@ public class GameManager : MonoBehaviour
 
     public bool isGameOn;
     public bool isGameOver;
+
+    enum Panels
+    {
+        MainMenu,
+        GameOver,
+        GamePanel
+    }
     
     public static GameManager Instance
     {
@@ -68,8 +75,7 @@ public class GameManager : MonoBehaviour
     {
         isGameOn = true;
 
-        m_mainMenu.SetActive(false);
-        m_GamePanel.SetActive(true);
+        SetPanels(Panels.GamePanel);
 
         Time.timeScale = 1f;
     }
@@ -78,7 +84,7 @@ public class GameManager : MonoBehaviour
     {
         InitializeSettings();
 
-        m_GamePanel.SetActive(true);
+        SetPanels(Panels.GamePanel);
 
         isGameOn = true;
         Time.timeScale = 1f;
@@ -108,11 +114,9 @@ public class GameManager : MonoBehaviour
         isGameOn = false;
         isGameOver = true;
 
-        m_mainMenu.SetActive(false);
-        m_GameOver.SetActive(true);
-        m_GamePanel.SetActive(false);
+        SetPanels(Panels.GameOver);
 
-        if(score > highScore)
+        if (score > highScore)
         {
             highScore = score;
         }
@@ -123,7 +127,26 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    void Update()
-    {
+    void SetPanels(Panels panel){
+        switch (panel)
+        {
+            case Panels.MainMenu:
+                m_mainMenu.SetActive(true);
+                m_GameOver.SetActive(false);
+                m_GamePanel.SetActive(false);
+                break;
+            case Panels.GameOver:
+                m_mainMenu.SetActive(false);
+                m_GameOver.SetActive(true);
+                m_GamePanel.SetActive(false);
+                break;
+            case Panels.GamePanel:
+                m_mainMenu.SetActive(false);
+                m_GameOver.SetActive(false);
+                m_GamePanel.SetActive(true);
+                break;
+            default:
+                break;
+        }
     }
 }
