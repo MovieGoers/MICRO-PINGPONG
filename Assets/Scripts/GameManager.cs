@@ -95,8 +95,8 @@ public class GameManager : MonoBehaviour
         color_alphaZero.a = 0.0f;
         scoreText.GetComponent<Text>().color = color_alphaZero;
 
-        m_ball.GetComponent<BallScript>().ballSpeed = initBallSpeed;
-        m_ball.GetComponent<BallScript>().ballMovementVector = initBallVector;
+        m_ball.GetComponent<BallScript>().SetBallSpeed(initBallSpeed);
+        m_ball.GetComponent<BallScript>().SetBallVector(initBallVector);
         m_ball.GetComponent<BallScript>().SetBallPosition(initBallPosition);
 
         m_mainMenu.SetActive(false);

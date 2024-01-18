@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class BallScript : MonoBehaviour
 {
-    public float ballSpeed;
-    public Vector3 ballMovementVector;
-    
+    float ballSpeed;
+    Vector3 ballMovementVector;
     Vector3 ballPosition;
 
     Rigidbody rb;
@@ -52,5 +51,14 @@ public class BallScript : MonoBehaviour
     public void SetBallPosition(Vector3 position)
     {
         transform.position = position;
+    }
+    public void SetBallSpeed(float speed)
+    {
+        ballSpeed = speed;
+    }
+
+    public void SetBallVector(Vector3 vec)
+    {
+        ballMovementVector = vec;
     }
 }
