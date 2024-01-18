@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject cube;
 
     public float initBallSpeed;
-    public Vector3 m_initBallvelocity;
+    public Vector3 m_initBallVector;
     
     public static GameManager Instance
     {
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         m_ball.GetComponent<BallScript>().ballSpeed = initBallSpeed;
-        m_ball.GetComponent<BallScript>().ballVelocity = m_initBallvelocity;
+        m_ball.GetComponent<BallScript>().ballMovementVector = m_initBallVector;
     }
 
     // Update is called once per frame
