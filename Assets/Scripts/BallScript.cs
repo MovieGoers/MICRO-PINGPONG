@@ -5,8 +5,9 @@ using UnityEngine;
 public class BallScript : MonoBehaviour
 {
     public float ballSpeed;
-
     public Vector3 ballMovementVector;
+    
+    Vector3 ballPosition;
 
     Rigidbody rb;
     private void Awake()
@@ -36,10 +37,20 @@ public class BallScript : MonoBehaviour
             else if (go.transform.up.z < -0.01f || go.transform.up.z > 0.01f)
                 ballMovementVector.z *= -1;
         }
+        
+        if(go.CompareTag("Invisible Collider")) //  게임 오버
+        {
+            GameManager.Instance.HandleGameOver();
+        }
     }
     
     public void AddBallSpeed(float value)
     {
         ballSpeed += value;
+    }
+
+    public void SetBallPosition(Vector3 position)
+    {
+        transform.position = position;
     }
 }

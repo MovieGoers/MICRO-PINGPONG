@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     private static InputManager instance;
-    private GameObject player;
+    public GameObject player;
 
     public float mouseZ;
     public static InputManager Instance
@@ -32,7 +32,8 @@ public class InputManager : MonoBehaviour
     }
     void Update()
     {
-        DragPlayer();
+        if(GameManager.Instance.isGameOn)
+            DragPlayer();
     }
 
     private void DragPlayer()

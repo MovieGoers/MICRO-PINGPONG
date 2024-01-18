@@ -26,9 +26,26 @@ public class SceneManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(this.gameObject);
     }
+
+    private void Start()
+    {
+
+    }
+    public void StartGame()
+    {
+    }
     public void LoadScene(string sceneName)
     {
         scenemanager.LoadSceneAsync(sceneName);
+    }
+
+    public void RestartGame()
+    {
+        scenemanager.LoadScene(scenemanager.GetActiveScene().buildIndex);
+    }
+
+    public void HandleGameOver()
+    {
     }
 
     public void QuitGame()
