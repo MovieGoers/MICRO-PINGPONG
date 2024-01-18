@@ -37,4 +37,9 @@ public class BallScript : MonoBehaviour
                 ballMovementVector.z *= -1;
         }
     }
+    
+    public void AddBallSpeed(float value)
+    {
+        ballSpeed += value;
+    }
 }

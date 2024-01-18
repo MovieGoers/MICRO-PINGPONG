@@ -5,11 +5,18 @@ using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
+    GameObject ball;
+    private void Awake()
+    {
+        ball = GameObject.Find("Ball");
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
         {
             GameManager.Instance.score += 1;
+
+            ball.GetComponent<BallScript>().AddBallSpeed(GameManager.Instance.ballSpeedIncrement);
             StartCoroutine(ShowScore());
         }
     }
@@ -23,12 +30,10 @@ public class PlayerScript : MonoBehaviour
         while(text_alpha > 0.0f)
         {
             Color new_color = GameManager.Instance.scoreText.GetComponent<Text>().color;
-
-            text_alpha -= 0.01f;
             new_color.a = text_alpha;
-
             GameManager.Instance.scoreText.GetComponent<Text>().color = new_color;
 
+            text_alpha -= 0.01f;
             yield return new WaitForSeconds(0.01f);
         }
     }

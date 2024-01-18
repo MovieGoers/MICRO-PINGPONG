@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameObject cube;
 
     public float initBallSpeed;
+    public float ballSpeedIncrement;
+
     public Vector3 m_initBallVector;
 
     public int score;
@@ -42,6 +44,10 @@ public class GameManager : MonoBehaviour
     {
         score = 0;
         scoreText.GetComponent<Text>().text = "" + score;
+        Color color_alphaZero = scoreText.GetComponent<Text>().color;
+        color_alphaZero.a = 0.0f;
+        scoreText.GetComponent<Text>().color = color_alphaZero;
+
         m_ball.GetComponent<BallScript>().ballSpeed = initBallSpeed;
         m_ball.GetComponent<BallScript>().ballMovementVector = m_initBallVector;
     }
