@@ -20,4 +20,9 @@ public class PlayerScript : MonoBehaviour
             StartCoroutine(UIManager.Instance.ShowScore());
         }
     }
+
+    public Vector3 GetPlayerPosition()
+    {
+        return transform.position;
+    }
 }

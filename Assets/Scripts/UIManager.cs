@@ -144,7 +144,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void HIdeCursor()
+    public void HideCursor()
     {
         Cursor.visible = false;
     }
@@ -166,7 +166,7 @@ public class UIManager : MonoBehaviour
     {
         if (GameManager.Instance.gameState == GameManager.GameStates.GameState)
         {
-            HIdeCursor();
+            HideCursor();
         }
     }
 }

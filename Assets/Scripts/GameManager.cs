@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     GameObject m_ball;
+    GameObject m_player;
+    GameObject m_ballSpawnPoint;
 
     public float initBallSpeed;
     public float ballSpeedIncrement;
@@ -45,6 +47,8 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         m_ball = GameObject.Find("Ball");
+        m_player = GameObject.Find("Player");
+        m_ballSpawnPoint = GameObject.Find("Ball Spawn Point");
     }
     void Start()
     {
@@ -63,7 +67,7 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameStates.GameState;
 
-        UIManager.Instance.HIdeCursor();
+        UIManager.Instance.HideCursor();
         UIManager.Instance.SetPanels(UIManager.Panels.GamePanel);
 
         Time.timeScale = 1f;
@@ -75,7 +79,7 @@ public class GameManager : MonoBehaviour
 
         gameState = GameStates.GameState;
 
-        UIManager.Instance.HIdeCursor();
+        UIManager.Instance.HideCursor();
         UIManager.Instance.SetPanels(UIManager.Panels.GamePanel);
 
         Time.timeScale = 1f;
@@ -90,8 +94,12 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetPanels(UIManager.Panels.SetAllPanelsFalse);
 
         m_ball.GetComponent<BallScript>().SetBallSpeed(initBallSpeed);
+
         m_ball.GetComponent<BallScript>().SetBallVector(initBallVector);
-        m_ball.GetComponent<BallScript>().SetBallPosition(initBallPosition);
+        Quaternion randomQuatZAxis = Quaternion.Euler(0, 0, 90 * Random.Range(0, 5)); // z 축 기준 랜덤 회전 쿼터니언 생성.
+        m_ball.GetComponent<BallScript>().ballMovementVector = randomQuatZAxis * m_ball.GetComponent<BallScript>().ballMovementVector; // 벡터 회전
+
+        m_ball.GetComponent<BallScript>().SetBallPosition(m_ballSpawnPoint.transform.position);
     }
     public void HandleGameOver()
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class BallScript : MonoBehaviour
 {
     float ballSpeed;
-    Vector3 ballMovementVector;
+    public Vector3 ballMovementVector;
     Vector3 ballPosition;
 
     Rigidbody rb;
