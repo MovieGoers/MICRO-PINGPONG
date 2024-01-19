@@ -35,6 +35,8 @@ public class BallScript : MonoBehaviour
                 ballMovementVector.y *= -1;
             else if (go.transform.up.z < -0.01f || go.transform.up.z > 0.01f)
                 ballMovementVector.z *= -1;
+
+            AudioManager.Instance.Play("Bump");
         }
         
         if(go.CompareTag("Invisible Collider")) //  게임 오버

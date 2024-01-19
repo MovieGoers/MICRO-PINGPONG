@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetPanels(UIManager.Panels.MainMenu);
 
         Time.timeScale = 0f;
+
+        AudioManager.Instance.Play("Music1");
     }
     
     public void StartGame()
@@ -115,5 +117,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetPanels(UIManager.Panels.GameOver);
 
         Time.timeScale = 0f;
+
+        AudioManager.Instance.Play("GameOver");
     }
 }

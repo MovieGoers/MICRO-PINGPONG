@@ -19,6 +19,8 @@ public class PlayerScript : MonoBehaviour
             ball.GetComponent<BallScript>().AddBallSpeed(GameManager.Instance.ballSpeedIncrement);
             ball.GetComponent<BallScript>().RotateBallVector(Random.Range(0f, 360f));
             StartCoroutine(UIManager.Instance.ShowScore());
+
+            AudioManager.Instance.Play("Score");
         }
     }
 
