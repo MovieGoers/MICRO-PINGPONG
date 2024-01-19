@@ -61,4 +61,10 @@ public class BallScript : MonoBehaviour
     {
         ballMovementVector = vec;
     }
+
+    public void RotateBallVector(float angle)
+    {
+        Quaternion randomQuatZAxis = Quaternion.Euler(0, 0, angle); // z 축 기준 랜덤 회전 쿼터니언 생성.
+        ballMovementVector = randomQuatZAxis * ballMovementVector; // 벡터 회전
+    }
 }

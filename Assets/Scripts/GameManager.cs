@@ -96,8 +96,7 @@ public class GameManager : MonoBehaviour
         m_ball.GetComponent<BallScript>().SetBallSpeed(initBallSpeed);
 
         m_ball.GetComponent<BallScript>().SetBallVector(initBallVector);
-        Quaternion randomQuatZAxis = Quaternion.Euler(0, 0, 90 * Random.Range(0, 5)); // z 축 기준 랜덤 회전 쿼터니언 생성.
-        m_ball.GetComponent<BallScript>().ballMovementVector = randomQuatZAxis * m_ball.GetComponent<BallScript>().ballMovementVector; // 벡터 회전
+        m_ball.GetComponent<BallScript>().RotateBallVector(Random.Range(0f, 360f));
 
         m_ball.GetComponent<BallScript>().SetBallPosition(m_ballSpawnPoint.transform.position);
     }
