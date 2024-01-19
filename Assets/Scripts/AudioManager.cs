@@ -60,4 +60,15 @@ public class AudioManager : MonoBehaviour
         s.source.pitch = value;
     }
 
+    public float GetPitch(string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name); // sounds 배열 내 name과 같은 이름을 가진 sound 찾기.
+
+        if (s == null) // sound를 찾지 못한 경우,
+        {
+            Debug.LogWarning("Sound : " + name + " Not Found!");
+            return 1f;
+        }
+        return s.source.pitch;
+    }
 }
