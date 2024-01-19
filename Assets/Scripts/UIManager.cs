@@ -139,7 +139,7 @@ public class UIManager : MonoBehaviour
         while (text_alpha > 0.0f)
         {
             SetScoreTextAlpha(text_alpha);
-            text_alpha -= 0.01f;
+            text_alpha -= 0.03f;
             yield return new WaitForSeconds(0.01f);
         }
     }
