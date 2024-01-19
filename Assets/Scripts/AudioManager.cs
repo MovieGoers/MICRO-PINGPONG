@@ -33,7 +33,6 @@ public class AudioManager : MonoBehaviour
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
-
         }
     }
     
@@ -47,6 +46,18 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.Play();
+    }
+
+    public void AddPitch(string name, float value)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name); // sounds 배열 내 name과 같은 이름을 가진 sound 찾기.
+
+        if (s == null) // sound를 찾지 못한 경우,
+        {
+            Debug.LogWarning("Sound : " + name + " Not Found!");
+            return;
+        }
+        s.source.pitch += value;
     }
 
 }
