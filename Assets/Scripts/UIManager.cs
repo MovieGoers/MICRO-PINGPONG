@@ -15,6 +15,10 @@ public class UIManager : MonoBehaviour
     public GameObject finalScoreText;
     public GameObject highScoreText;
 
+    Rect screenRect;
+
+    public bool isCursorOutOfScreen;
+
     public enum Panels
     {
         MainMenu,
@@ -50,6 +54,27 @@ public class UIManager : MonoBehaviour
         m_mainMenu = GameObject.Find("Canvas/Main Menu");
         m_GameOver = GameObject.Find("Canvas/Game Over");
         m_GamePanel = GameObject.Find("Canvas/Game Panel");
+    }
+
+    private void Start()
+    {
+        isCursorOutOfScreen = true;
+        screenRect = new Rect(0, 0, Screen.width, Screen.height);
+    }
+
+    private void Update()
+    {
+        if (!screenRect.Contains(Input.mousePosition))
+        {
+            isCursorOutOfScreen = true;
+            HandleCursorOutOfScreen(); 
+        }
+        else
+        {
+            isCursorOutOfScreen = false;
+            HandleCursorOnScreen();
+        }
+
     }
 
     public void SetPanels(Panels panel)
@@ -116,6 +141,32 @@ public class UIManager : MonoBehaviour
             SetScoreTextAlpha(text_alpha);
             text_alpha -= 0.01f;
             yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    public void HIdeCursor()
+    {
+        Cursor.visible = false;
+    }
+
+    public void DisplayCursor()
+    {
+        Cursor.visible = true;
+    }
+
+    void HandleCursorOutOfScreen()
+    {
+        if(GameManager.Instance.gameState == GameManager.GameStates.GameState)
+        {
+            DisplayCursor();
+        }
+    }
+
+    void HandleCursorOnScreen()
+    {
+        if (GameManager.Instance.gameState == GameManager.GameStates.GameState)
+        {
+            HIdeCursor();
         }
     }
 }

@@ -16,10 +16,15 @@ public class GameManager : MonoBehaviour
 
     public int score;
     public int highScore;
+    public enum GameStates
+    {
+        MainMenuState,
+        GameState,
+        GameOverState
+    }
 
-    public bool isGameOn;
-    public bool isGameOver;
-    
+    public GameStates gameState;
+
     public static GameManager Instance
     {
         get
@@ -45,6 +50,10 @@ public class GameManager : MonoBehaviour
     {
         InitializeSettings();
         highScore = 0;
+
+        gameState = GameStates.MainMenuState;
+
+        UIManager.Instance.DisplayCursor();
         UIManager.Instance.SetPanels(UIManager.Panels.MainMenu);
 
         Time.timeScale = 0f;
@@ -52,8 +61,9 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
-        isGameOn = true;
+        gameState = GameStates.GameState;
 
+        UIManager.Instance.HIdeCursor();
         UIManager.Instance.SetPanels(UIManager.Panels.GamePanel);
 
         Time.timeScale = 1f;
@@ -63,18 +73,18 @@ public class GameManager : MonoBehaviour
     {
         InitializeSettings();
 
+        gameState = GameStates.GameState;
+
+        UIManager.Instance.HIdeCursor();
         UIManager.Instance.SetPanels(UIManager.Panels.GamePanel);
 
-        isGameOn = true;
         Time.timeScale = 1f;
     }
 
     void InitializeSettings() // 게임 매니저 내 변수 값 false 또는 0으로 초기화.
     {
-        isGameOn = false;
-        isGameOver = false;
-
         score = 0;
+
         UIManager.Instance.SetScoreText(score);
         UIManager.Instance.SetScoreTextAlpha(0f);
         UIManager.Instance.SetPanels(UIManager.Panels.SetAllPanelsFalse);
@@ -85,14 +95,14 @@ public class GameManager : MonoBehaviour
     }
     public void HandleGameOver()
     {
-        isGameOn = false;
-        isGameOver = true;
-
         if (score > highScore)
         {
             highScore = score;
         }
 
+        gameState = GameStates.GameOverState;
+
+        UIManager.Instance.DisplayCursor();
         UIManager.Instance.SetHighScoreText(highScore);
         UIManager.Instance.SetFinalScoreText(score);
         UIManager.Instance.SetPanels(UIManager.Panels.GameOver);
