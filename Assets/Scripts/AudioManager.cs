@@ -48,7 +48,7 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
-    public void AddPitch(string name, float value)
+    public void SetPitch(string name, float value)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name); // sounds 배열 내 name과 같은 이름을 가진 sound 찾기.
 
@@ -57,7 +57,7 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound : " + name + " Not Found!");
             return;
         }
-        s.source.pitch += value;
+        s.source.pitch = value;
     }
 
 }
