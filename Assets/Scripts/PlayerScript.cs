@@ -17,24 +17,7 @@ public class PlayerScript : MonoBehaviour
             GameManager.Instance.score += 1;
 
             ball.GetComponent<BallScript>().AddBallSpeed(GameManager.Instance.ballSpeedIncrement);
-            StartCoroutine(ShowScore());
-        }
-    }
-
-    IEnumerator ShowScore()
-    {
-        yield return null;
-        GameManager.Instance.scoreText.GetComponent<Text>().text = "" + GameManager.Instance.score;
-
-        float text_alpha = 1.0f;
-        while(text_alpha > 0.0f)
-        {
-            Color new_color = GameManager.Instance.scoreText.GetComponent<Text>().color;
-            new_color.a = text_alpha;
-            GameManager.Instance.scoreText.GetComponent<Text>().color = new_color;
-
-            text_alpha -= 0.01f;
-            yield return new WaitForSeconds(0.01f);
+            StartCoroutine(UIManager.Instance.ShowScore());
         }
     }
 }
