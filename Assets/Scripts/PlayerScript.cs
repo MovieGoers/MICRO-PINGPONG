@@ -22,6 +22,13 @@ public class PlayerScript : MonoBehaviour
 
             AudioManager.Instance.Play("Score");
             StartCoroutine(CameraManager.Instance.ShakeCamera(0.2f, 0.2f));
+
+            if(GameManager.Instance.score % 10 == 0) // 10점 낼때마다 효과.
+            {
+                StartCoroutine(GameManager.Instance.SlowTime(0.1f, 1.5f));
+                AudioManager.Instance.Play("Explosion");
+                AudioManager.Instance.Play("Milestone");
+            }
         }
     }
 
