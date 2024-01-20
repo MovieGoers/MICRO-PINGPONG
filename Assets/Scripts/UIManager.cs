@@ -16,9 +16,15 @@ public class UIManager : MonoBehaviour
     public GameObject finalScoreText;
     public GameObject highScoreText;
 
+    public Dropdown resolutionDropdown;
+
+    Resolution[] resolutions;
+
     Rect screenRect;
 
     public bool isCursorOutOfScreen;
+
+    int currentResolutionIndex;
 
     public enum Panels
     {
@@ -62,7 +68,29 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         isCursorOutOfScreen = true;
+
         screenRect = new Rect(0, 0, Screen.width, Screen.height);
+
+        resolutions = Screen.resolutions;
+
+        resolutionDropdown.ClearOptions();
+
+        List<string> options = new List<string>();
+
+        for(int i = 0; i < resolutions.Length; i++)
+        {
+            string option_str = resolutions[i].width + "X" + resolutions[i].height;
+            options.Add(option_str);
+
+            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentResolutionIndex = i;
+            }
+        }
+
+        resolutionDropdown.AddOptions(options);
+        resolutionDropdown.value = currentResolutionIndex;
+        resolutionDropdown.RefreshShownValue();
     }
 
     private void Update()
@@ -181,5 +209,21 @@ public class UIManager : MonoBehaviour
         {
             HideCursor();
         }
+    }
+
+    public void SetResolutionByValue(int width, int height)
+    {
+        Screen.SetResolution(width, height, Screen.fullScreen);
+        screenRect = new Rect(0, 0, width, height);
+    }
+    public void SetResolutionByIndex(int index)
+    {
+        Screen.SetResolution(resolutions[index].width, resolutions[index].height, Screen.fullScreen);
+        screenRect = new Rect(0, 0, resolutions[index].width, resolutions[index].height);
+    }
+
+    public void ToggleFullScreen(bool isOn)
+    {
+        Screen.fullScreen = isOn;
     }
 }

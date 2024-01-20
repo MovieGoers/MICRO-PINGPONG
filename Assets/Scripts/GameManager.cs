@@ -140,9 +140,4 @@ public class GameManager : MonoBehaviour
 
         AudioManager.Instance.Play("GameOver");
     }
-
-    public void ToggleFullScreen(bool inOn)
-    {
-        Screen.fullScreen = inOn;
-    }
 }
