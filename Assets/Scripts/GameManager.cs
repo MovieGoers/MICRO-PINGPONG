@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     GameObject m_ball;
-    GameObject m_player;
+    public GameObject player;
     GameObject m_ballSpawnPoint;
 
     public float initBallSpeed;
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         m_ball = GameObject.Find("Ball");
-        m_player = GameObject.Find("Player");
+        player = GameObject.Find("Player");
         m_ballSpawnPoint = GameObject.Find("Ball Spawn Point");
     }
     void Start()
@@ -139,5 +139,13 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
 
         AudioManager.Instance.Play("GameOver");
+    }
+
+    public IEnumerator SlowTime(float timeScale, float duration)
+    {
+        yield return null;
+        Time.timeScale = timeScale;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
     }
 }
