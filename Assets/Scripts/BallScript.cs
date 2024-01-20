@@ -6,12 +6,14 @@ public class BallScript : MonoBehaviour
 {
     float ballSpeed;
     public Vector3 ballMovementVector;
+    public GameObject ballLine;
     Vector3 ballPosition;
 
     Rigidbody rb;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        ballLine = GameObject.Find("Ball Line");
     }
 
     void Start()
@@ -22,6 +24,7 @@ public class BallScript : MonoBehaviour
     void Update()
     {
         transform.Translate(ballMovementVector.normalized * ballSpeed * Time.deltaTime);
+        ballLine.transform.position = new Vector3(ballLine.transform.position.x, ballLine.transform.position.y, transform.position.z);
     }
 
     private void OnCollisionEnter(Collision collision)
