@@ -9,6 +9,8 @@ public class CameraManager : MonoBehaviour
     public GameObject CameraHolder;
     public GameObject MainCamera;
 
+    bool isCameraShakeOn;
+
     public static CameraManager Instance
     {
         get
@@ -29,27 +31,40 @@ public class CameraManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    private void Start()
+    {
+        isCameraShakeOn = true;
+    }
+
     public IEnumerator ShakeCamera(float duration, float magnitude)
     {
         yield return null;
-        Vector3 originalPosition = MainCamera.transform.localPosition;
-        // shake camera
-        while (duration > 0)
+        if (isCameraShakeOn)
         {
-            Debug.Log(MainCamera.transform.localPosition);
+            Vector3 originalPosition = MainCamera.transform.localPosition;
+            // shake camera
+            while (duration > 0)
+            {
+                Debug.Log(MainCamera.transform.localPosition);
 
-            float x = Random.Range(-1f, 1f) * magnitude;
-            float y = Random.Range(-1f, 1f) * magnitude;
-            float z = Random.Range(-1f, 1f) * magnitude;
+                float x = Random.Range(-1f, 1f) * magnitude;
+                float y = Random.Range(-1f, 1f) * magnitude;
+                float z = Random.Range(-1f, 1f) * magnitude;
 
-            MainCamera.transform.localPosition = new Vector3(x, y, z);
+                MainCamera.transform.localPosition = new Vector3(x, y, z);
 
-            duration -= 0.015f;
-            yield return new WaitForSeconds(0.015f);
+                duration -= 0.015f;
+                yield return new WaitForSeconds(0.015f);
+            }
+
+
+            MainCamera.transform.localPosition = originalPosition;
         }
+    }
 
-
-        MainCamera.transform.localPosition = originalPosition;
+    public void SetCameraShake(bool isOn)
+    {
+        isCameraShakeOn = isOn;
     }
 }
 
