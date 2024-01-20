@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     GameObject m_mainMenu;
     GameObject m_GameOver;
     GameObject m_GamePanel;
+    GameObject m_Options;
 
     public GameObject scoreText;
     public GameObject finalScoreText;
@@ -24,6 +25,7 @@ public class UIManager : MonoBehaviour
         MainMenu,
         GameOver,
         GamePanel,
+        Options,
         SetAllPanelsFalse
     }
 
@@ -54,6 +56,7 @@ public class UIManager : MonoBehaviour
         m_mainMenu = GameObject.Find("Canvas/Main Menu");
         m_GameOver = GameObject.Find("Canvas/Game Over");
         m_GamePanel = GameObject.Find("Canvas/Game Panel");
+        m_Options = GameObject.Find("Canvas/Options");
     }
 
     private void Start()
@@ -85,21 +88,31 @@ public class UIManager : MonoBehaviour
                 m_mainMenu.SetActive(true);
                 m_GameOver.SetActive(false);
                 m_GamePanel.SetActive(false);
+                m_Options.SetActive(false);
                 break;
             case Panels.GameOver:
                 m_mainMenu.SetActive(false);
                 m_GameOver.SetActive(true);
                 m_GamePanel.SetActive(false);
+                m_Options.SetActive(false);
                 break;
             case Panels.GamePanel:
                 m_mainMenu.SetActive(false);
                 m_GameOver.SetActive(false);
                 m_GamePanel.SetActive(true);
+                m_Options.SetActive(false);
                 break;
             case Panels.SetAllPanelsFalse:
                 m_mainMenu.SetActive(false);
                 m_GameOver.SetActive(false);
                 m_GamePanel.SetActive(false);
+                m_Options.SetActive(false);
+                break;
+            case Panels.Options:
+                m_mainMenu.SetActive(false);
+                m_GameOver.SetActive(false);
+                m_GamePanel.SetActive(false);
+                m_Options.SetActive(true);
                 break;
             default:
                 break;

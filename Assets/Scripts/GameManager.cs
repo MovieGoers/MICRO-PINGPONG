@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour
     {
         MainMenuState,
         GameState,
-        GameOverState
+        GameOverState,
+        OptionState
     }
 
     public GameStates gameState;
@@ -65,6 +66,16 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.Play("Music1");
     }
     
+    public void ShowStartMenu()
+    {
+        gameState = GameStates.MainMenuState;
+
+        UIManager.Instance.DisplayCursor();
+        UIManager.Instance.SetPanels(UIManager.Panels.MainMenu);
+
+        Time.timeScale = 0f;
+    }
+
     public void StartGame()
     {
         gameState = GameStates.GameState;
@@ -75,6 +86,15 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public void ShowOptions()
+    {
+        gameState = GameStates.OptionState;
+
+        UIManager.Instance.DisplayCursor();
+        UIManager.Instance.SetPanels(UIManager.Panels.Options);
+
+        Time.timeScale = 0f;
+    }
     public void RestartGame()
     {
         InitializeSettings();
