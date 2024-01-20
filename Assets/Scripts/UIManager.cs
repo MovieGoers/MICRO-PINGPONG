@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,16 +16,18 @@ public class UIManager : MonoBehaviour
     public GameObject scoreText;
     public GameObject finalScoreText;
     public GameObject highScoreText;
+    public Toggle FullscreenToggleUI;
 
     public Dropdown resolutionDropdown;
-
-    Resolution[] resolutions;
 
     Rect screenRect;
 
     public bool isCursorOutOfScreen;
 
     int currentResolutionIndex;
+
+    List<string> options;
+    List<Vector2Int> resolutions;
 
     public enum Panels
     {
@@ -69,20 +72,38 @@ public class UIManager : MonoBehaviour
     {
         isCursorOutOfScreen = true;
 
-        screenRect = new Rect(0, 0, Screen.width, Screen.height);
-
-        resolutions = Screen.resolutions;
-
         resolutionDropdown.ClearOptions();
 
-        List<string> options = new List<string>();
+        options = new List<string>();
+        resolutions = new List<Vector2Int>();
 
-        for(int i = 0; i < resolutions.Length; i++)
+        // 초기 옵션 설정 (추후에 리팩토링 필요.)
+        options.Add("1280 X 720");
+        resolutions.Add(new Vector2Int(1280, 720));
+        options.Add("1600 X 900");
+        resolutions.Add(new Vector2Int(1600, 900));
+        options.Add("1920 X 1080");
+        resolutions.Add(new Vector2Int(1920, 1080));
+
+        // JSON 파일에서 해상도 읽어온 뒤에 설정.
+
+        Settings setting = new Settings();
+
+        if (File.Exists(Application.dataPath + "SettingsFile.json"))
         {
-            string option_str = resolutions[i].width + "X" + resolutions[i].height;
-            options.Add(option_str);
+            setting = LoadScreenSettingsToJSON();
+        }
+        else
+        {
+            SaveScreenSettingsToJSON(1280, 720);
+            setting.resolution_width = 1280;
+            setting.resolution_height = 720;
+        }
 
-            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+        SetResolutionByValue(setting.resolution_width, setting.resolution_height);
+        for (int i = 0; i < resolutions.Count; i++)
+        {
+            if (resolutions[i].x == Screen.width && resolutions[i].y == Screen.height)
             {
                 currentResolutionIndex = i;
             }
@@ -91,6 +112,10 @@ public class UIManager : MonoBehaviour
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+
+        FullscreenToggleUI.isOn = Screen.fullScreen;
+
+        screenRect = new Rect(0, 0, Screen.width, Screen.height);
     }
 
     private void Update()
@@ -218,12 +243,31 @@ public class UIManager : MonoBehaviour
     }
     public void SetResolutionByIndex(int index)
     {
-        Screen.SetResolution(resolutions[index].width, resolutions[index].height, Screen.fullScreen);
-        screenRect = new Rect(0, 0, resolutions[index].width, resolutions[index].height);
+        Screen.SetResolution(resolutions[index].x, resolutions[index].y, Screen.fullScreen);
+        screenRect = new Rect(0, 0, resolutions[index].x, resolutions[index].y);
+        SaveScreenSettingsToJSON(resolutions[index].x, resolutions[index].y);
     }
 
     public void ToggleFullScreen(bool isOn)
     {
         Screen.fullScreen = isOn;
+    }
+
+    public void SaveScreenSettingsToJSON(int width, int height)
+    {
+        Settings setting = new Settings();
+        setting.resolution_width = width;
+        setting.resolution_height = height;
+
+        string json = JsonUtility.ToJson(setting, true);
+        File.WriteAllText(Application.dataPath + "SettingsFile.json", json);
+    }
+
+    public Settings LoadScreenSettingsToJSON()
+    {
+        string json = File.ReadAllText(Application.dataPath + "SettingsFile.json");
+        Settings setting = JsonUtility.FromJson<Settings>(json);
+
+        return setting;
     }
 }
