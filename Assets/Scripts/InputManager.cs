@@ -34,11 +34,6 @@ public class InputManager : MonoBehaviour
     {
         if(GameManager.Instance.gameState == GameManager.GameStates.GameState && !UIManager.Instance.isCursorOutOfScreen)
             DragPlayer();
-
-        if(Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.gameState == GameManager.GameStates.GameState)
-        {
-            GameManager.Instance.ShowOptions();
-        }
     }
 
     private void DragPlayer()
