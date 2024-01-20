@@ -37,6 +37,12 @@ public class BallScript : MonoBehaviour
                 ballMovementVector.z *= -1;
 
             AudioManager.Instance.Play("Bump");
+
+            if (go.CompareTag("Wall"))
+            {
+                ParticleManager.Instance.SetSparkPosition(transform.position);
+                ParticleManager.Instance.PlaySpark();
+            }
         }
         
         if(go.CompareTag("Invisible Collider")) //  게임 오버
