@@ -21,6 +21,7 @@ public class PlayerScript : MonoBehaviour
             StartCoroutine(UIManager.Instance.ShowScore());
 
             AudioManager.Instance.Play("Score");
+            StartCoroutine(CameraManager.Instance.ShakeCamera(0.2f, 0.2f));
         }
     }
 

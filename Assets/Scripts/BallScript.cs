@@ -43,6 +43,7 @@ public class BallScript : MonoBehaviour
 
             if (go.CompareTag("Wall"))
             {
+                StartCoroutine(CameraManager.Instance.ShakeCamera(0.1f, 0.03f));
                 ParticleManager.Instance.SetSparkPosition(transform.position);
                 ParticleManager.Instance.PlaySpark();
             }
