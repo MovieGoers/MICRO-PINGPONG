@@ -4,7 +4,17 @@ using UnityEngine;
 [System.Serializable]
 public class Sound
 {
+    public enum SoundTypes
+    {
+        background,
+        effect,
+    };
+
+    [HideInInspector]
+    public float originalVolume;
+
     public string name;
+    public SoundTypes soundType;
 
     public AudioClip clip;
 

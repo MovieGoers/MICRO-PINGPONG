@@ -30,7 +30,10 @@ public class AudioManager : MonoBehaviour
         {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
+
             s.source.volume = s.volume;
+            s.originalVolume = s.volume;
+
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
         }
@@ -70,5 +73,41 @@ public class AudioManager : MonoBehaviour
             return 1f;
         }
         return s.source.pitch;
+    }
+
+    public void ToggleBackground(bool isOn)
+    {
+        foreach (Sound s in sounds)
+        {
+            if(s.soundType == Sound.SoundTypes.background)
+            {
+                if (isOn)
+                {
+                    s.source.volume = s.originalVolume;
+                }
+                else
+                {
+                    s.source.volume = 0f;
+                }
+            }
+        }
+    }
+
+    public void ToggleSoundEffect(bool isOn)
+    {
+        foreach (Sound s in sounds)
+        {
+            if (s.soundType == Sound.SoundTypes.effect)
+            {
+                if (isOn)
+                {
+                    s.source.volume = s.originalVolume;
+                }
+                else
+                {
+                    s.source.volume = 0f;
+                }
+            }
+        }
     }
 }
