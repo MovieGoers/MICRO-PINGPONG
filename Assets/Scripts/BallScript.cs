@@ -7,6 +7,8 @@ public class BallScript : MonoBehaviour
     float ballSpeed;
     public Vector3 ballMovementVector;
     public GameObject ballLine;
+    public bool hasEnteredBugZone;
+
     Vector3 ballPosition;
 
     Rigidbody rb;
@@ -25,6 +27,15 @@ public class BallScript : MonoBehaviour
     {
         transform.Translate(ballMovementVector.normalized * ballSpeed * Time.deltaTime);
         ballLine.transform.position = new Vector3(ballLine.transform.position.x, ballLine.transform.position.y, transform.position.z);
+        if (transform.position.x < GameManager.Instance.wallLeft.transform.position.x
+            || transform.position.x > GameManager.Instance.wallRight.transform.position.x
+            || transform.position.y < GameManager.Instance.wallBottom.transform.position.y
+            || transform.position.y > GameManager.Instance.wallTop.transform.position.y)
+        {
+            Debug.Log("Out of Bound!!");
+            transform.Translate(-1 * ballMovementVector.normalized * ballSpeed * Time.deltaTime);
+            RotateBallVector(180f);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -48,13 +59,17 @@ public class BallScript : MonoBehaviour
                 ParticleManager.Instance.PlaySpark();
             }
         }
-        
-        if(go.CompareTag("Invisible Collider")) //  게임 오버
+
+        if (go.CompareTag("Invisible Collider")) //  게임 오버
         {
             GameManager.Instance.HandleGameOver();
         }
+
+        if (go.CompareTag("Edge Collider"))
+        {
+            Debug.Log("Entered Edge Collider!");
+        }
     }
-    
     public void AddBallSpeed(float value)
     {
         ballSpeed += value;

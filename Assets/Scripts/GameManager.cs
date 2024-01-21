@@ -18,6 +18,14 @@ public class GameManager : MonoBehaviour
 
     public int score;
     public int highScore;
+
+    public GameObject Cube;
+
+    public GameObject wallBottom;
+    public GameObject wallLeft;
+    public GameObject wallRight;
+    public GameObject wallTop;
+
     public enum GameStates
     {
         MainMenuState,
@@ -27,6 +35,8 @@ public class GameManager : MonoBehaviour
     }
 
     public GameStates gameState;
+
+    public bool DebugMode;
 
     public static GameManager Instance
     {
@@ -64,6 +74,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
 
         AudioManager.Instance.Play("Music1");
+
     }
     
     public void ShowStartMenu()
