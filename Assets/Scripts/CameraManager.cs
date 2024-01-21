@@ -8,8 +8,14 @@ public class CameraManager : MonoBehaviour
 
     public GameObject CameraHolder;
     public GameObject MainCamera;
+    public GameObject Player;
+
+    public float CameraMovementRatio;
 
     bool isCameraShakeOn;
+
+    Vector3 originalPlayerPosition;
+    Vector3 originalCameraHolderPosition;
 
     public static CameraManager Instance
     {
@@ -34,6 +40,13 @@ public class CameraManager : MonoBehaviour
     private void Start()
     {
         isCameraShakeOn = true;
+        originalPlayerPosition = Player.transform.position;
+        originalCameraHolderPosition = CameraHolder.transform.position;
+    }
+
+    private void Update()
+    {
+        ChangeCameraHolderPosition((Player.transform.position - originalPlayerPosition) * CameraMovementRatio);
     }
 
     public IEnumerator ShakeCamera(float duration, float magnitude)
@@ -65,6 +78,11 @@ public class CameraManager : MonoBehaviour
     public void SetCameraShake(bool isOn)
     {
         isCameraShakeOn = isOn;
+    }
+
+    public void ChangeCameraHolderPosition(Vector3 localPosition)
+    {
+        CameraHolder.transform.position = originalCameraHolderPosition + localPosition;
     }
 }
 
