@@ -32,7 +32,7 @@ public class InputManager : MonoBehaviour
     }
     void Update()
     {
-        if(GameManager.Instance.gameState == GameManager.GameStates.GameState && !UIManager.Instance.isCursorOutOfScreen)
+        if(GameManager.Instance.gameState == GameManager.GameStates.GameState && !UIManager.Instance.isCursorOutOfScreen && !GameManager.Instance.DebugMode)
             DragPlayer();
     }
 
