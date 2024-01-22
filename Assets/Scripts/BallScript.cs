@@ -7,13 +7,31 @@ public class BallScript : MonoBehaviour
     float ballSpeed;
     public Vector3 ballMovementVector;
     public GameObject ballLine;
-    public bool hasEnteredBugZone;
 
     Vector3 ballPosition;
 
     Rigidbody rb;
+
+    private static BallScript instance;
+
+    public static BallScript Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
     private void Awake()
     {
+        if (instance)
+        {
+            Destroy(instance);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(this.gameObject);
         rb = GetComponent<Rigidbody>();
         ballLine = GameObject.Find("Ball Line");
     }
@@ -27,12 +45,13 @@ public class BallScript : MonoBehaviour
     {
         transform.Translate(ballMovementVector.normalized * ballSpeed * Time.deltaTime);
         ballLine.transform.position = new Vector3(ballLine.transform.position.x, ballLine.transform.position.y, transform.position.z);
+
+        // 공이 게임 맵 밖으로 나가는 버그 처리.
         if (transform.position.x < GameManager.Instance.wallLeft.transform.position.x
             || transform.position.x > GameManager.Instance.wallRight.transform.position.x
             || transform.position.y < GameManager.Instance.wallBottom.transform.position.y
             || transform.position.y > GameManager.Instance.wallTop.transform.position.y)
         {
-            Debug.Log("Out of Bound!!");
             transform.Translate(-1 * ballMovementVector.normalized * ballSpeed * Time.deltaTime);
             RotateBallVector(180f);
         }
@@ -70,6 +89,21 @@ public class BallScript : MonoBehaviour
             Debug.Log("Entered Edge Collider!");
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        GameObject go = other.gameObject;
+        if (go.CompareTag("Item"))
+        {
+            // 아이템 효과 실행.
+            ItemManager.Instance.ActivateItem(go.name);
+            go.SetActive(false);
+
+
+            // 파티클 효과 실행
+        }
+
+    }
     public void AddBallSpeed(float value)
     {
         ballSpeed += value;
@@ -93,5 +127,15 @@ public class BallScript : MonoBehaviour
     {
         Quaternion randomQuatZAxis = Quaternion.Euler(0, 0, angle); // z 축 기준 랜덤 회전 쿼터니언 생성.
         ballMovementVector = randomQuatZAxis * ballMovementVector; // 벡터 회전
+    }
+
+    public void SetBallSize(Vector3 scale)
+    {
+        transform.transform.localScale = scale;
+    }
+
+    public GameObject GetBallObject()
+    {
+        return gameObject;
     }
 }
