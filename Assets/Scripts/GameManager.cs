@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour
     public int score;
     public int highScore;
 
-    public GameObject Cube;
-
     public GameObject wallBottom;
     public GameObject wallLeft;
     public GameObject wallRight;
@@ -64,7 +62,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitializeSettings();
-        highScore = 0;
+        highScore = -1;
 
         gameState = GameStates.MainMenuState;
 
@@ -138,6 +136,7 @@ public class GameManager : MonoBehaviour
         if (score > highScore)
         {
             highScore = score;
+            LeaderboardsManager.Instance.HandleLeaderboard(score);
         }
 
         gameState = GameStates.GameOverState;

@@ -11,14 +11,8 @@ public class LeaderboardsManager : MonoBehaviour
     // Create a leaderboard with this ID in the Unity Cloud Dashboard
     const string LeaderboardId = "micro-pong-leaderboard";
 
-    string VersionId { get; set; }
-    int Offset { get; set; }
-    int Limit { get; set; }
-     int RangeLimit { get; set; }
-    List<string> FriendIds { get; set; }
-
     private static LeaderboardsManager instance;
-    public class Score
+    public class Score // 리더보드 element
     {
         public string playerId;
         public string playerName;
@@ -50,7 +44,7 @@ public class LeaderboardsManager : MonoBehaviour
 
         await UnityServices.InitializeAsync();
 
-        await SignInAnonymously();
+        await SignInAnonymously(); // 익명으로 서비스에 플레이어 등록
     }
 
     async Task SignInAnonymously()
@@ -68,6 +62,8 @@ public class LeaderboardsManager : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
+
+    // 플레이어 최고 점수 등록 -> 리더보드 및 플레이어 점수 가져오기.
     public async void HandleLeaderboard(int highscore)
     {
         var addScoreResponse = await LeaderboardsService.Instance.AddPlayerScoreAsync(LeaderboardId, highscore); // 플레이어 최고 점수 입력
@@ -98,16 +94,5 @@ public class LeaderboardsManager : MonoBehaviour
         playerScore.score = playerScoreResponse.Score;
 
         UIManager.Instance.SetPlayerLeaderboardText();
-    }
-
-    public async void GetPlayerRange()
-    {
-        // Returns a total of 11 entries (the given player plus 5 on either side)
-        var rangeLimit = 5;
-        var scoresResponse = await LeaderboardsService.Instance.GetPlayerRangeAsync(
-            LeaderboardId,
-            new GetPlayerRangeOptions { RangeLimit = rangeLimit }
-        );
-        Debug.Log(JsonConvert.SerializeObject(scoresResponse));
     }
 }
