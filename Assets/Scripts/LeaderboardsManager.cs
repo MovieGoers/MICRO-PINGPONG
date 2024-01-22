@@ -14,7 +14,7 @@ public class LeaderboardsManager : MonoBehaviour
     string VersionId { get; set; }
     int Offset { get; set; }
     int Limit { get; set; }
-    int RangeLimit { get; set; }
+     int RangeLimit { get; set; }
     List<string> FriendIds { get; set; }
 
     private static LeaderboardsManager instance;
@@ -26,8 +26,8 @@ public class LeaderboardsManager : MonoBehaviour
         public double score;
     };
 
-    List<Score> scores = new List<Score>(); // 상위 플레이어 Score 리스트
-    Score playerScore = new Score(); // 현재 플레이어 Score.
+    public List<Score> scores = new List<Score>(); // 상위 플레이어 Score 리스트
+    public Score playerScore = new Score(); // 현재 플레이어 Score.
     
     public static LeaderboardsManager Instance
     {
@@ -68,41 +68,36 @@ public class LeaderboardsManager : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
-    public async void AddScore(int score)
+    public async void HandleLeaderboard(int highscore)
     {
-        var scoreResponse = await LeaderboardsService.Instance.AddPlayerScoreAsync(LeaderboardId, score);
-        Debug.Log(JsonConvert.SerializeObject(scoreResponse));
-    }
+        var addScoreResponse = await LeaderboardsService.Instance.AddPlayerScoreAsync(LeaderboardId, highscore); // 플레이어 최고 점수 입력
 
-    public async void GetScores()
-    {
-        var scoresResponse =
-            await LeaderboardsService.Instance.GetScoresAsync(LeaderboardId);
+        var leaderboardResponse = await LeaderboardsService.Instance.GetScoresAsync(LeaderboardId); // 리더보드 가져오기.
 
         scores.Clear();
 
-        for(int i=0;i< scoresResponse.Total; i++)
+        for (int i = 0; i < leaderboardResponse.Total; i++)
         {
             Score newScore = new Score();
 
-            newScore.playerId = scoresResponse.Results[i].PlayerId;
-            newScore.playerName = scoresResponse.Results[i].PlayerName;
-            newScore.rank = scoresResponse.Results[i].Rank;
-            newScore.score = scoresResponse.Results[i].Score;
+            newScore.playerId = leaderboardResponse.Results[i].PlayerId;
+            newScore.playerName = leaderboardResponse.Results[i].PlayerName;
+            newScore.rank = leaderboardResponse.Results[i].Rank;
+            newScore.score = leaderboardResponse.Results[i].Score;
 
             scores.Add(newScore);
         }
-    }
 
-    public async void GetPlayerScore()
-    {
-        var scoreResponse =
-            await LeaderboardsService.Instance.GetPlayerScoreAsync(LeaderboardId);
+        UIManager.Instance.AddLeaderboardScoreText(); // 플레이어의 리더보드 정보 가져오기.
 
-        playerScore.playerId = scoreResponse.PlayerId;
-        playerScore.playerName = scoreResponse.PlayerName;
-        playerScore.rank = scoreResponse.Rank;
-        playerScore.score = scoreResponse.Score;
+        var playerScoreResponse = await LeaderboardsService.Instance.GetPlayerScoreAsync(LeaderboardId);
+
+        playerScore.playerId = playerScoreResponse.PlayerId;
+        playerScore.playerName = playerScoreResponse.PlayerName;
+        playerScore.rank = playerScoreResponse.Rank;
+        playerScore.score = playerScoreResponse.Score;
+
+        UIManager.Instance.SetPlayerLeaderboardText();
     }
 
     public async void GetPlayerRange()
