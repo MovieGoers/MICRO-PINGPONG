@@ -18,7 +18,17 @@ public class LeaderboardsManager : MonoBehaviour
     List<string> FriendIds { get; set; }
 
     private static LeaderboardsManager instance;
+    public class Score
+    {
+        public string playerId;
+        public string playerName;
+        public int rank;
+        public double score;
+    };
 
+    List<Score> scores = new List<Score>(); // 상위 플레이어 Score 리스트
+    Score playerScore = new Score(); // 현재 플레이어 Score.
+    
     public static LeaderboardsManager Instance
     {
         get
@@ -68,30 +78,31 @@ public class LeaderboardsManager : MonoBehaviour
     {
         var scoresResponse =
             await LeaderboardsService.Instance.GetScoresAsync(LeaderboardId);
-        Debug.Log(JsonConvert.SerializeObject(scoresResponse));
-    }
 
-    public async void GetPaginatedScores()
-    {
-        Offset = 10;
-        Limit = 10;
-        var scoresResponse =
-            await LeaderboardsService.Instance.GetScoresAsync(LeaderboardId, new GetScoresOptions { Offset = Offset, Limit = Limit });
-        Debug.Log(JsonConvert.SerializeObject(scoresResponse));
+        scores.Clear();
+
+        for(int i=0;i< scoresResponse.Total; i++)
+        {
+            Score newScore = new Score();
+
+            newScore.playerId = scoresResponse.Results[i].PlayerId;
+            newScore.playerName = scoresResponse.Results[i].PlayerName;
+            newScore.rank = scoresResponse.Results[i].Rank;
+            newScore.score = scoresResponse.Results[i].Score;
+
+            scores.Add(newScore);
+        }
     }
 
     public async void GetPlayerScore()
     {
         var scoreResponse =
             await LeaderboardsService.Instance.GetPlayerScoreAsync(LeaderboardId);
-        Debug.Log(JsonConvert.SerializeObject(scoreResponse));
-    }
 
-    public async void GetVersionScores()
-    {
-        var versionScoresResponse =
-            await LeaderboardsService.Instance.GetVersionScoresAsync(LeaderboardId, VersionId);
-        Debug.Log(JsonConvert.SerializeObject(versionScoresResponse));
+        playerScore.playerId = scoreResponse.PlayerId;
+        playerScore.playerName = scoreResponse.PlayerName;
+        playerScore.rank = scoreResponse.Rank;
+        playerScore.score = scoreResponse.Score;
     }
 
     public async void GetPlayerRange()
