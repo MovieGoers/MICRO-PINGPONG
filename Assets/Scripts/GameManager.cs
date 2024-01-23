@@ -6,9 +6,6 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
-    GameObject m_ball;
-    public GameObject player;
-    GameObject m_ballSpawnPoint;
 
     public float initBallSpeed;
     public float ballSpeedIncrement;
@@ -19,10 +16,15 @@ public class GameManager : MonoBehaviour
     public int score;
     public int highScore;
 
+    public GameObject player;
+
     public GameObject wallBottom;
     public GameObject wallLeft;
     public GameObject wallRight;
     public GameObject wallTop;
+
+    private GameObject m_ball;
+    private GameObject m_ballSpawnPoint;
 
     public enum GameStates
     {
@@ -124,12 +126,16 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetScoreTextAlpha(0f);
         UIManager.Instance.SetPanels(UIManager.Panels.SetAllPanelsFalse);
 
-        m_ball.GetComponent<BallScript>().SetBallSpeed(initBallSpeed);
+        PlayerScript.Instance.gameObject.transform.localScale = PlayerScript.Instance.originalPlayerScale;
 
-        m_ball.GetComponent<BallScript>().SetBallVector(initBallVector);
-        m_ball.GetComponent<BallScript>().RotateBallVector(Random.Range(0f, 360f));
+        BallScript.Instance.SetBallSpeed(initBallSpeed);
+        BallScript.Instance.SetBallVector(initBallVector);
+        BallScript.Instance.RotateBallVector(Random.Range(0f, 360f));
+        BallScript.Instance.SetBallPosition(m_ballSpawnPoint.transform.position);
+        BallScript.Instance.SetBallSize(BallScript.Instance.originalBallScale);
 
-        m_ball.GetComponent<BallScript>().SetBallPosition(m_ballSpawnPoint.transform.position);
+        ItemManager.Instance.SpawnItem();
+        ItemManager.Instance.DeactivateItemEffect();
     }
     public void HandleGameOver()
     {

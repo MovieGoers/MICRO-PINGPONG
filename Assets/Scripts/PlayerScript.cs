@@ -5,12 +5,37 @@ using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
+    private static PlayerScript instance;
+
     GameObject ball;
-    private void Awake()
+
+    public GameObject whitePlane;
+    public Vector3 originalPlayerScale;
+    public static PlayerScript Instance
     {
-        ball = GameObject.Find("Ball");
+        get
+        {
+            return instance;
+        }
     }
 
+    private void Awake()
+    {
+        if (instance)
+        {
+            Destroy(instance);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+        ball = BallScript.Instance.gameObject;
+    }
+    private void Start()
+    {
+        originalPlayerScale = transform.localScale;
+    }
     private void Update()
     {
         if (GameManager.Instance.DebugMode)
@@ -23,19 +48,38 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Ball")) // 플레이어가 공에 닿을 경우,
         {
             GameManager.Instance.score += 1;
-            ball.GetComponent<BallScript>().AddBallSpeed(GameManager.Instance.ballSpeedIncrement);
-            ball.GetComponent<BallScript>().RotateBallVector(Random.Range(0f, 360f));
+
+            BallScript.Instance.AddBallSpeed(GameManager.Instance.ballSpeedIncrement);
+            BallScript.Instance.RotateBallVector(Random.Range(0f, 360f));
+
             StartCoroutine(UIManager.Instance.ShowScore());
 
             AudioManager.Instance.Play("Score");
             StartCoroutine(CameraManager.Instance.ShakeCamera(0.2f, 0.2f));
+
+            StartCoroutine(PlayHitEffect(0.09f));
 
             if(GameManager.Instance.score % 10 == 0) // 10점 낼때마다 효과.
             {
                 StartCoroutine(GameManager.Instance.SlowTime(0.1f, 1.5f));
                 AudioManager.Instance.Play("Explosion");
                 AudioManager.Instance.Play("Milestone");
+
+                ParticleManager.Instance.SetItemSpark(ball.transform.position);
+                ParticleManager.Instance.PlayItemSpark();
             }
         }
+    }
+
+    IEnumerator PlayHitEffect(float planeScale)
+    {
+        yield return null;
+        whitePlane.transform.localScale = new Vector3(planeScale, 1, planeScale);
+        while (whitePlane.transform.localScale.x > 0)
+        {
+            yield return new WaitForSeconds(0.01f);
+            whitePlane.transform.localScale -= new Vector3(0.005f, 0, 0.005f);
+        }
+        whitePlane.transform.localScale = new Vector3(0, 1, 0);
     }
 }

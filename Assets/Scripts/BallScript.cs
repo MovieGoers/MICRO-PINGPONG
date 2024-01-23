@@ -8,7 +8,9 @@ public class BallScript : MonoBehaviour
     public Vector3 ballMovementVector;
     public GameObject ballLine;
 
-    Vector3 ballPosition;
+    public Vector3 originalBallScale;
+
+    Vector3 m_ballPosition;
 
     Rigidbody rb;
 
@@ -38,12 +40,13 @@ public class BallScript : MonoBehaviour
 
     void Start()
     {
-
+        originalBallScale = transform.localScale;
     }
 
     void Update()
     {
         transform.Translate(ballMovementVector.normalized * ballSpeed * Time.deltaTime);
+
         ballLine.transform.position = new Vector3(ballLine.transform.position.x, ballLine.transform.position.y, transform.position.z);
 
         // 공이 게임 맵 밖으로 나가는 버그 처리.
@@ -95,15 +98,13 @@ public class BallScript : MonoBehaviour
         GameObject go = other.gameObject;
         if (go.CompareTag("Item"))
         {
-            // 아이템 효과 실행.
-            ItemManager.Instance.ActivateItem(go.name);
+            // 아이템 효과, 파티클 실행.
+            ItemManager.Instance.ActivateItemEffect(go.name);
             go.SetActive(false);
-
-
-            // 파티클 효과 실행
         }
 
     }
+
     public void AddBallSpeed(float value)
     {
         ballSpeed += value;
