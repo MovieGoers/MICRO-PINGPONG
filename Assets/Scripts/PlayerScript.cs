@@ -7,8 +7,6 @@ public class PlayerScript : MonoBehaviour
 {
     private static PlayerScript instance;
 
-    GameObject ball;
-
     public GameObject whitePlane;
     public Vector3 originalPlayerScale;
 
@@ -33,8 +31,6 @@ public class PlayerScript : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(this.gameObject);
-
-        ball = BallScript.Instance.gameObject;
     }
     private void Start()
     {
@@ -46,7 +42,8 @@ public class PlayerScript : MonoBehaviour
     {
         if (GameManager.Instance.DebugMode)
         {
-            transform.position = new Vector3(ball.transform.position.x, ball.transform.position.y, transform.position.z);
+            Vector3 ballPosition = BallScript.Instance.gameObject.transform.position;
+            transform.position = new Vector3(ballPosition.x, ballPosition.y, transform.position.z);
         }
     }
     private void OnCollisionEnter(Collision collision)
@@ -73,7 +70,7 @@ public class PlayerScript : MonoBehaviour
                 AudioManager.Instance.Play("Explosion");
                 AudioManager.Instance.Play("Milestone");
 
-                ParticleManager.Instance.SetItemSpark(ball.transform.position);
+                ParticleManager.Instance.SetItemSpark(BallScript.Instance.transform.position);
                 ParticleManager.Instance.PlayItemSpark();
             }
         }
