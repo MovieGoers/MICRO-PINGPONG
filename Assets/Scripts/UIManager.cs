@@ -14,8 +14,11 @@ public class UIManager : MonoBehaviour
     GameObject m_Options;
 
     public GameObject scoreText;
+
     public GameObject finalScoreText;
     public GameObject highScoreText;
+    public GameObject doubleScoreText;
+
     public Toggle FullscreenToggleUI;
 
     public Dropdown resolutionDropdown;
@@ -28,6 +31,11 @@ public class UIManager : MonoBehaviour
 
     List<string> options;
     List<Vector2Int> resolutions;
+
+    public Text playerScoreboard;
+
+    public GameObject leaderboardScoreText;
+    public GameObject leaderboardcontent;
 
     public enum Panels
     {
@@ -179,10 +187,16 @@ public class UIManager : MonoBehaviour
         scoreText.GetComponent<Text>().color = color_alphaZero;
     }
 
+    public void SetDoubleScoreTextAlpha(float alpha)
+    {
+        Color color_alphaZero = doubleScoreText.GetComponent<Text>().color;
+        color_alphaZero.a = alpha;
+        doubleScoreText.GetComponent<Text>().color = color_alphaZero;
+    }
+
     public void SetScoreText(int score)
     {
         scoreText.GetComponent<Text>().text = "" + score;
-
     }
 
     public void SetHighScoreText(int highScore)
@@ -269,5 +283,38 @@ public class UIManager : MonoBehaviour
         Settings setting = JsonUtility.FromJson<Settings>(json);
 
         return setting;
+    }
+
+    public void AddLeaderboardScoreText()
+    {
+        // 리더보드 내 모든 텍스트 제거.
+        foreach(Transform child in leaderboardcontent.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < LeaderboardsManager.Instance.scores.Count; i++)
+        {
+            int score, rank;
+            string playerName;
+            score = (int)LeaderboardsManager.Instance.scores[i].score;
+            rank = LeaderboardsManager.Instance.scores[i].rank + 1;
+            playerName = LeaderboardsManager.Instance.scores[i].playerName;
+
+            GameObject newText = Instantiate(leaderboardScoreText);
+            newText.GetComponent<Text>().text = rank + ". " + playerName + " - " + score;
+            newText.transform.SetParent(leaderboardcontent.transform);
+            newText.transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+    public void SetPlayerLeaderboardText()
+    {
+        int score, rank;
+        string playerName;
+        score = (int)LeaderboardsManager.Instance.playerScore.score;
+        rank = LeaderboardsManager.Instance.playerScore.rank + 1;
+        playerName = LeaderboardsManager.Instance.playerScore.playerName;
+        playerScoreboard.text = rank + ". " + playerName + " - " + score;
     }
 }

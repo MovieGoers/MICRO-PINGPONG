@@ -53,6 +53,7 @@ public class ItemManager : MonoBehaviour
         StartCoroutine("PlayBallSizeGrowAnimation");
         StartCoroutine("PlayPlayerItemAnimation");
         StartCoroutine("PlayScoreItemAnimation");
+        StartCoroutine("PlayDoubleScoreTextAnimation");
     }
 
     public void SpawnItem(GameObject item)
@@ -168,8 +169,12 @@ public class ItemManager : MonoBehaviour
     IEnumerator DoubleScore()
     {
         yield return null;
+        UIManager.Instance.doubleScoreText.SetActive(true);
         PlayerScript.Instance.addingScore = 2;
+
         yield return new WaitForSeconds(itemDuration);
+
+        UIManager.Instance.doubleScoreText.SetActive(false);
         PlayerScript.Instance.addingScore = 1;
 
         yield return new WaitForSecondsRealtime(itemSpawnTime);
@@ -218,5 +223,28 @@ public class ItemManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
             item_ScoreDouble.transform.Rotate(new Vector3(itemRotationSpeed, itemRotationSpeed, itemRotationSpeed));
         }
+    }
+
+    public IEnumerator PlayDoubleScoreTextAnimation()
+    {
+        yield return 0;
+        float text_alpha = 1.0f;
+
+        while (true)
+        {
+            while (text_alpha > 0.0f)
+            {
+                UIManager.Instance.SetDoubleScoreTextAlpha(text_alpha);
+                text_alpha -= 0.03f;
+                yield return new WaitForSeconds(0.01f);
+            }
+            while (text_alpha < 1.0f)
+            {
+                UIManager.Instance.SetDoubleScoreTextAlpha(text_alpha);
+                text_alpha += 0.03f;
+                yield return new WaitForSeconds(0.01f);
+            }
+        }
+
     }
 }
