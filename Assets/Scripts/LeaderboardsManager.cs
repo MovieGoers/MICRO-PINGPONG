@@ -72,14 +72,14 @@ public class LeaderboardsManager : MonoBehaviour
 
         scores.Clear();
 
-        for (int i = 0; i < leaderboardResponse.Total; i++)
+        foreach(var response in leaderboardResponse.Results)
         {
             Score newScore = new Score();
 
-            newScore.playerId = leaderboardResponse.Results[i].PlayerId;
-            newScore.playerName = leaderboardResponse.Results[i].PlayerName;
-            newScore.rank = leaderboardResponse.Results[i].Rank;
-            newScore.score = leaderboardResponse.Results[i].Score;
+            newScore.playerId = response.PlayerId;
+            newScore.playerName = response.PlayerName;
+            newScore.rank = response.Rank;
+            newScore.score = response.Score;
 
             scores.Add(newScore);
         }
