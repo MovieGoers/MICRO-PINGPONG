@@ -125,6 +125,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetScoreText(score);
         UIManager.Instance.SetScoreTextAlpha(0f);
         UIManager.Instance.SetPanels(UIManager.Panels.SetAllPanelsFalse);
+        UIManager.Instance.itemEffectText.SetActive(false);
 
         PlayerScript.Instance.gameObject.transform.localScale = PlayerScript.Instance.originalPlayerScale;
         PlayerScript.Instance.addingScore = 1;
@@ -139,6 +140,7 @@ public class GameManager : MonoBehaviour
         ItemManager.Instance.SpawnItem(ItemManager.Instance.item_BallSizeGrow);
         ItemManager.Instance.SpawnItem(ItemManager.Instance.item_PlayerSizeGrow);
         ItemManager.Instance.SpawnItem(ItemManager.Instance.item_ScoreDouble);
+        StopCoroutine("PlayItemEffectTextAnimation");
 
         ItemManager.Instance.DeactivateItemEffect();
     }

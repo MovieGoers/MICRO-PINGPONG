@@ -6,25 +6,25 @@ public class ItemManager : MonoBehaviour
 {
     private static ItemManager instance;
 
-    public GameObject item_BallSizeGrow;
-    public GameObject item_PlayerSizeGrow;
-    public GameObject item_ScoreDouble;
+    public GameObject item_BallSizeGrow; // 공 크기 증가 아이템
+    public GameObject item_PlayerSizeGrow; // 플레이어 크기 증가 아이템
+    public GameObject item_ScoreDouble; // 점수 획득 두 배 증가 아이템
 
-    public GameObject ItemSpawnStartPoint;
-    public GameObject ItemSpawnEndPoint;
+    public GameObject ItemSpawnStartPoint; // 아이템 스폰 시작 위치 표시를 위한 게임 오브젝트.
+    public GameObject ItemSpawnEndPoint; // 아이템 스폰 끝 위치 표시를 위한 게임 오브젝트.
 
-    public float itemDuration;
-    public float itemSpawnTime;
-    public float ItemMaxScale;
+    public float itemDuration; // 아이템 효과 지속 시간
+    public float itemSpawnTime; // 아이템 효과 끝난 뒤 다시 스폰하기까지의 시간.
+    public float ItemMaxScale; // 아이템 최대 크기
 
-    public float ballMaxScale;
+    public float ballMaxScale; // 공 최대 증가 크기
 
-    public float playerMaxScale;
-    public float itemRotationSpeed;
+    public float playerMaxScale; // 플레이어 최대 증가 크기
+    public float itemRotationSpeed; // 아이템 회전 속도
 
-    public Coroutine[] coroutineEffect;
+    public Coroutine[] coroutineEffect; // 아이템 효과 관리 위한 코루틴 array.
 
-    int itemNum;
+    int itemNum; // 아이템 전체 갯수.
 
     public static ItemManager Instance
     {
@@ -50,27 +50,16 @@ public class ItemManager : MonoBehaviour
     {
         itemNum = 3;
         coroutineEffect = new Coroutine[itemNum];
+
+        // 아이템 애니메이션 시작.
         StartCoroutine("PlayBallSizeGrowAnimation");
         StartCoroutine("PlayPlayerItemAnimation");
         StartCoroutine("PlayScoreItemAnimation");
-        StartCoroutine("PlayDoubleScoreTextAnimation");
     }
 
     public void SpawnItem(GameObject item)
     {
         Vector3 spawnPosition;
-
-/*        int item_randomInt = Random.Range(0, 2);
-        switch (item_randomInt) {
-            case 0:
-                item = item_BallSizeGrow;
-                break;
-            case 1:
-                item = item_PlayerSizeGrow;
-                break;
-            default:
-                break;
-        }*/
 
         item.SetActive(true);
 
@@ -87,21 +76,26 @@ public class ItemManager : MonoBehaviour
         switch (item)
         {
             case "Item-BallSizeGrow":
+                UIManager.Instance.SetItemEffectText("BIGGER BALL");
                 coroutineEffect[0] = StartCoroutine(IncreaseBallSize());
                 break;
             case "Item-PlayerSizeGrow":
+                UIManager.Instance.SetItemEffectText("BIGGER PLAYER");
                 coroutineEffect[1] = StartCoroutine(IncreasePlayerSize());
                 break;
             case "Item-ScoreDouble":
+                UIManager.Instance.SetItemEffectText("DOUBLE POINTS");
                 coroutineEffect[2] = StartCoroutine(DoubleScore());
                 break;
             default:
                 break;
         }
+        StartCoroutine("PlayItemEffectTextAnimation");
     }
 
     public void DeactivateItemEffect()
     {
+        // 모든 아이템 효과 코루틴 멈춤.
         for(int i = 0; i < itemNum; i++)
         {
             if (coroutineEffect[i] != null)
@@ -144,7 +138,7 @@ public class ItemManager : MonoBehaviour
         GameObject ball = BallScript.Instance.GetBallObject();
         Vector3 originalBallScale = BallScript.Instance.originalBallScale;
 
-        while(ball.transform.localScale.x < ballMaxScale)
+        while (ball.transform.localScale.x < ballMaxScale)
         {
             yield return new WaitForSeconds(0.05f);
             ball.transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
@@ -169,12 +163,10 @@ public class ItemManager : MonoBehaviour
     IEnumerator DoubleScore()
     {
         yield return null;
-        UIManager.Instance.doubleScoreText.SetActive(true);
         PlayerScript.Instance.addingScore = 2;
 
         yield return new WaitForSeconds(itemDuration);
 
-        UIManager.Instance.doubleScoreText.SetActive(false);
         PlayerScript.Instance.addingScore = 1;
 
         yield return new WaitForSecondsRealtime(itemSpawnTime);
@@ -225,26 +217,27 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public IEnumerator PlayDoubleScoreTextAnimation()
+    public IEnumerator PlayItemEffectTextAnimation()
     {
         yield return 0;
-        float text_alpha = 1.0f;
 
-        while (true)
+        UIManager.Instance.itemEffectText.SetActive(true);
+        float text_alpha = 0.0f;
+
+        for(int i=0;i<4;i++)
         {
-            while (text_alpha > 0.0f)
-            {
-                UIManager.Instance.SetDoubleScoreTextAlpha(text_alpha);
-                text_alpha -= 0.03f;
-                yield return new WaitForSeconds(0.01f);
-            }
             while (text_alpha < 1.0f)
             {
-                UIManager.Instance.SetDoubleScoreTextAlpha(text_alpha);
+                UIManager.Instance.SetItemEffectTextAlpha(text_alpha);
                 text_alpha += 0.03f;
                 yield return new WaitForSeconds(0.01f);
             }
+            while (text_alpha > 0.0f)
+            {
+                UIManager.Instance.SetItemEffectTextAlpha(text_alpha);
+                text_alpha -= 0.03f;
+                yield return new WaitForSeconds(0.01f);
+            }
         }
-
     }
 }

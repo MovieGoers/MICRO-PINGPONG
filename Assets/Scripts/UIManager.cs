@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject finalScoreText;
     public GameObject highScoreText;
-    public GameObject doubleScoreText;
+    public GameObject itemEffectText;
 
     public Toggle FullscreenToggleUI;
 
@@ -187,11 +187,16 @@ public class UIManager : MonoBehaviour
         scoreText.GetComponent<Text>().color = color_alphaZero;
     }
 
-    public void SetDoubleScoreTextAlpha(float alpha)
+    public void SetItemEffectTextAlpha(float alpha)
     {
-        Color color_alphaZero = doubleScoreText.GetComponent<Text>().color;
+        Color color_alphaZero = itemEffectText.GetComponent<Text>().color;
         color_alphaZero.a = alpha;
-        doubleScoreText.GetComponent<Text>().color = color_alphaZero;
+        itemEffectText.GetComponent<Text>().color = color_alphaZero;
+    }
+
+    public void SetItemEffectText(string text)
+    {
+        itemEffectText.GetComponent<Text>().text = text;
     }
 
     public void SetScoreText(int score)
