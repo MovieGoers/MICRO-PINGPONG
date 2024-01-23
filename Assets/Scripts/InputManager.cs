@@ -34,6 +34,9 @@ public class InputManager : MonoBehaviour
     {
         if(GameManager.Instance.gameState == GameManager.GameStates.GameState && !UIManager.Instance.isCursorOutOfScreen && !GameManager.Instance.DebugMode)
             DragPlayer();
+
+        if (GameManager.Instance.gameState == GameManager.GameStates.GameState && Input.GetKeyDown(KeyCode.Escape))
+            SceneManager.Instance.QuitGame();
     }
 
     private void DragPlayer()
