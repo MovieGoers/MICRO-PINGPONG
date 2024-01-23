@@ -35,6 +35,8 @@ public class AudioManager : MonoBehaviour
             s.originalVolume = s.volume;
 
             s.source.pitch = s.pitch;
+            s.originalPitch = s.pitch;
+
             s.source.loop = s.loop;
         }
     }

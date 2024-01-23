@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    void InitializeSettings() // 게임 매니저 내 변수 값 false 또는 0으로 초기화.
+    void InitializeSettings() // 게임 초깃값 설정.
     {
         score = 0;
 
@@ -127,6 +127,8 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetPanels(UIManager.Panels.SetAllPanelsFalse);
 
         PlayerScript.Instance.gameObject.transform.localScale = PlayerScript.Instance.originalPlayerScale;
+        PlayerScript.Instance.addingScore = 1;
+        PlayerScript.Instance.tempScore = 0;
 
         BallScript.Instance.SetBallSpeed(initBallSpeed);
         BallScript.Instance.SetBallVector(initBallVector);
@@ -134,7 +136,10 @@ public class GameManager : MonoBehaviour
         BallScript.Instance.SetBallPosition(m_ballSpawnPoint.transform.position);
         BallScript.Instance.SetBallSize(BallScript.Instance.originalBallScale);
 
-        ItemManager.Instance.SpawnItem();
+        ItemManager.Instance.SpawnItem(ItemManager.Instance.item_BallSizeGrow);
+        ItemManager.Instance.SpawnItem(ItemManager.Instance.item_PlayerSizeGrow);
+        ItemManager.Instance.SpawnItem(ItemManager.Instance.item_ScoreDouble);
+
         ItemManager.Instance.DeactivateItemEffect();
     }
     public void HandleGameOver()

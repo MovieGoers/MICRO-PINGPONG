@@ -7,7 +7,8 @@ public class ItemManager : MonoBehaviour
     private static ItemManager instance;
 
     public GameObject item_BallSizeGrow;
-    public GameObject Item_PlayerSizeGrow;
+    public GameObject item_PlayerSizeGrow;
+    public GameObject item_ScoreDouble;
 
     public GameObject ItemSpawnStartPoint;
     public GameObject ItemSpawnEndPoint;
@@ -19,11 +20,11 @@ public class ItemManager : MonoBehaviour
     public float ballMaxScale;
 
     public float playerMaxScale;
-    public float playerItemRotationSpeed;
+    public float itemRotationSpeed;
 
-    public Coroutine coroutineEffect;
+    public Coroutine[] coroutineEffect;
 
-    int m_itemCount;
+    int itemNum;
 
     public static ItemManager Instance
     {
@@ -47,18 +48,28 @@ public class ItemManager : MonoBehaviour
 
     private void Start()
     {
-        m_itemCount = 0;
+        itemNum = 3;
+        coroutineEffect = new Coroutine[itemNum];
         StartCoroutine("PlayBallSizeGrowAnimation");
         StartCoroutine("PlayPlayerItemAnimation");
+        StartCoroutine("PlayScoreItemAnimation");
     }
 
-    public void SpawnItem()
+    public void SpawnItem(GameObject item)
     {
         Vector3 spawnPosition;
 
-        // --------------------------
-        GameObject item = Item_PlayerSizeGrow; // 나중에 랜덤으로 설정.
-
+/*        int item_randomInt = Random.Range(0, 2);
+        switch (item_randomInt) {
+            case 0:
+                item = item_BallSizeGrow;
+                break;
+            case 1:
+                item = item_PlayerSizeGrow;
+                break;
+            default:
+                break;
+        }*/
 
         item.SetActive(true);
 
@@ -67,19 +78,21 @@ public class ItemManager : MonoBehaviour
         spawnPosition.z = Random.Range(ItemSpawnStartPoint.transform.position.z, ItemSpawnEndPoint.transform.position.z);
 
         item.transform.position = spawnPosition;
-
-        m_itemCount += 1;
     }
 
     public void ActivateItemEffect(string item)
     {
+        AudioManager.Instance.Play("ItemGet");
         switch (item)
         {
             case "Item-BallSizeGrow":
-                coroutineEffect = StartCoroutine(IncreaseBallSize());
+                coroutineEffect[0] = StartCoroutine(IncreaseBallSize());
                 break;
             case "Item-PlayerSizeGrow":
-                coroutineEffect = StartCoroutine(IncreasePlayerSize());
+                coroutineEffect[1] = StartCoroutine(IncreasePlayerSize());
+                break;
+            case "Item-ScoreDouble":
+                coroutineEffect[2] = StartCoroutine(DoubleScore());
                 break;
             default:
                 break;
@@ -88,8 +101,12 @@ public class ItemManager : MonoBehaviour
 
     public void DeactivateItemEffect()
     {
-        if(coroutineEffect != null)
-            StopCoroutine(coroutineEffect);
+        for(int i = 0; i < itemNum; i++)
+        {
+            if (coroutineEffect[i] != null)
+                StopCoroutine(coroutineEffect[i]);
+        }
+
     }
 
     IEnumerator IncreasePlayerSize()
@@ -117,7 +134,7 @@ public class ItemManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(itemSpawnTime);
 
-        SpawnItem();
+        SpawnItem(item_PlayerSizeGrow);
     }
 
     IEnumerator IncreaseBallSize()
@@ -145,7 +162,19 @@ public class ItemManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(itemSpawnTime);
 
-        SpawnItem();
+        SpawnItem(item_BallSizeGrow);
+    }
+
+    IEnumerator DoubleScore()
+    {
+        yield return null;
+        PlayerScript.Instance.addingScore = 2;
+        yield return new WaitForSeconds(itemDuration);
+        PlayerScript.Instance.addingScore = 1;
+
+        yield return new WaitForSecondsRealtime(itemSpawnTime);
+
+        SpawnItem(item_ScoreDouble);
     }
     public IEnumerator PlayBallSizeGrowAnimation()
     {
@@ -177,7 +206,17 @@ public class ItemManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.05f);
-            Item_PlayerSizeGrow.transform.Rotate(new Vector3(playerItemRotationSpeed, playerItemRotationSpeed, playerItemRotationSpeed));
+            item_PlayerSizeGrow.transform.Rotate(new Vector3(itemRotationSpeed, itemRotationSpeed, itemRotationSpeed));
+        }
+    }
+
+    public IEnumerator PlayScoreItemAnimation()
+    {
+        yield return null;
+        while (true)
+        {
+            yield return new WaitForSeconds(0.05f);
+            item_ScoreDouble.transform.Rotate(new Vector3(itemRotationSpeed, itemRotationSpeed, itemRotationSpeed));
         }
     }
 }

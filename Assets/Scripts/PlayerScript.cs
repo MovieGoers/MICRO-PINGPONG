@@ -11,6 +11,10 @@ public class PlayerScript : MonoBehaviour
 
     public GameObject whitePlane;
     public Vector3 originalPlayerScale;
+
+    public int addingScore;
+
+    public int tempScore;
     public static PlayerScript Instance
     {
         get
@@ -34,6 +38,8 @@ public class PlayerScript : MonoBehaviour
     }
     private void Start()
     {
+        addingScore = 1;
+        tempScore = 0;
         originalPlayerScale = transform.localScale;
     }
     private void Update()
@@ -47,8 +53,8 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ball")) // 플레이어가 공에 닿을 경우,
         {
-            GameManager.Instance.score += 1;
-
+            GameManager.Instance.score += addingScore;
+            tempScore += addingScore;
             BallScript.Instance.AddBallSpeed(GameManager.Instance.ballSpeedIncrement);
             BallScript.Instance.RotateBallVector(Random.Range(0f, 360f));
 
@@ -59,8 +65,10 @@ public class PlayerScript : MonoBehaviour
 
             StartCoroutine(PlayHitEffect(0.09f));
 
-            if(GameManager.Instance.score % 10 == 0) // 10점 낼때마다 효과.
+            
+            if(tempScore >= 10) // 10점 낼때마다 효과.
             {
+                tempScore -= 10;
                 StartCoroutine(GameManager.Instance.SlowTime(0.1f, 1.5f));
                 AudioManager.Instance.Play("Explosion");
                 AudioManager.Instance.Play("Milestone");
