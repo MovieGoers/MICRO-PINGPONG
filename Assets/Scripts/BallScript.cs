@@ -50,20 +50,33 @@ public class BallScript : MonoBehaviour
         ballLine.transform.position = new Vector3(ballLine.transform.position.x, ballLine.transform.position.y, transform.position.z);
 
         // 공이 게임 맵 밖으로 나가는 버그 처리.
+
         if (transform.position.x < GameManager.Instance.wallLeft.transform.position.x
-            || transform.position.x > GameManager.Instance.wallRight.transform.position.x
-            || transform.position.y < GameManager.Instance.wallBottom.transform.position.y
+            || transform.position.x > GameManager.Instance.wallRight.transform.position.x)
+        {
+            transform.Translate(-1 * ballMovementVector.normalized * ballSpeed * Time.deltaTime);
+            ballMovementVector.x *= -1;
+        }
+
+        if (transform.position.y < GameManager.Instance.wallBottom.transform.position.y
             || transform.position.y > GameManager.Instance.wallTop.transform.position.y)
         {
             transform.Translate(-1 * ballMovementVector.normalized * ballSpeed * Time.deltaTime);
-            RotateBallVector(180f);
+            ballMovementVector.y *= -1;
         }
+
+        if(transform.position.z > GameManager.Instance.wallBack.transform.position.z)
+        {
+            transform.Translate(-1 * ballMovementVector.normalized * ballSpeed * Time.deltaTime);
+            ballMovementVector.z *= -1;
+        }
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         GameObject go = collision.gameObject;
-        if (go.CompareTag("Wall") || go.CompareTag("Player")) // 부딪힌 면에 대한 방향 변환
+        if (go.CompareTag("Wall")) // 부딪힌 면에 대한 방향 변환
         {
             if (go.transform.up.x < -0.01f || go.transform.up.x > 0.01f)
                 ballMovementVector.x *= -1;
@@ -81,6 +94,12 @@ public class BallScript : MonoBehaviour
                 ParticleManager.Instance.PlaySpark();
             }
         }
+
+         if( go.CompareTag("Player")){
+            AudioManager.Instance.Play("Bump");
+            if(ballMovementVector.z < 0)
+                ballMovementVector.z *= -1;
+         }
 
         if (go.CompareTag("Invisible Collider")) //  게임 오버
         {
