@@ -66,6 +66,8 @@ public class LeaderboardsManager : MonoBehaviour
     // 플레이어 최고 점수 등록 -> 리더보드 및 플레이어 점수 가져오기.
     public async void HandleLeaderboard(int highscore)
     {
+        UIManager.Instance.AddLoadingText();
+
         var addScoreResponse = await LeaderboardsService.Instance.AddPlayerScoreAsync(LeaderboardId, highscore); // 플레이어 최고 점수 입력
 
         var leaderboardResponse = await LeaderboardsService.Instance.GetScoresAsync(LeaderboardId); // 리더보드 가져오기.
@@ -84,8 +86,6 @@ public class LeaderboardsManager : MonoBehaviour
             scores.Add(newScore);
         }
 
-        UIManager.Instance.AddLeaderboardScoreText(); // 플레이어의 리더보드 정보 가져오기.
-
         var playerScoreResponse = await LeaderboardsService.Instance.GetPlayerScoreAsync(LeaderboardId);
 
         playerScore.playerId = playerScoreResponse.PlayerId;
@@ -93,6 +93,7 @@ public class LeaderboardsManager : MonoBehaviour
         playerScore.rank = playerScoreResponse.Rank;
         playerScore.score = playerScoreResponse.Score;
 
+        UIManager.Instance.AddLeaderboardScoreText(); // 플레이어의 리더보드 정보 가져오기.
         UIManager.Instance.SetPlayerLeaderboardText();
     }
 }

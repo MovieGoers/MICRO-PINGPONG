@@ -13,6 +13,9 @@ public class Sound
     [HideInInspector]
     public float originalVolume;
 
+    [HideInInspector]
+    public float originalPitch;
+
     public string name;
     public SoundTypes soundType;
 

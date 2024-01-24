@@ -7,6 +7,7 @@ public class ParticleManager : MonoBehaviour
     private static ParticleManager instance;
 
     public ParticleSystem Spark;
+    public ParticleSystem ItemSpark;
 
     public static ParticleManager Instance
     {
@@ -27,6 +28,10 @@ public class ParticleManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(this.gameObject);
     }
+    public void SetItemSpark(Vector3 vec)
+    {
+        ItemSpark.transform.position = vec;
+    }
 
     public void SetSparkPosition(Vector3 vec)
     {
@@ -36,5 +41,11 @@ public class ParticleManager : MonoBehaviour
     {
         ParticleSystem newSpark = Instantiate(Spark, Spark.transform.position, Spark.transform.rotation);
         newSpark.Play();
+    }
+
+    public void PlayItemSpark()
+    {
+        ParticleSystem newItemSpark = Instantiate(ItemSpark, ItemSpark.transform.position, ItemSpark.transform.rotation);
+        newItemSpark.Play();
     }
 }

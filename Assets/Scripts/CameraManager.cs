@@ -58,8 +58,6 @@ public class CameraManager : MonoBehaviour
             // shake camera
             while (duration > 0)
             {
-                Debug.Log(MainCamera.transform.localPosition);
-
                 float x = Random.Range(-1f, 1f) * magnitude;
                 float y = Random.Range(-1f, 1f) * magnitude;
                 float z = Random.Range(-1f, 1f) * magnitude;

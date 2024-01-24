@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public GameObject wallLeft;
     public GameObject wallRight;
     public GameObject wallTop;
+    public GameObject wallBack;
 
     private GameObject m_ball;
     private GameObject m_ballSpawnPoint;
@@ -31,7 +32,8 @@ public class GameManager : MonoBehaviour
         MainMenuState,
         GameState,
         GameOverState,
-        OptionState
+        OptionState,
+        CreditsState
     }
 
     public GameStates gameState;
@@ -103,6 +105,16 @@ public class GameManager : MonoBehaviour
 
         UIManager.Instance.DisplayCursor();
         UIManager.Instance.SetPanels(UIManager.Panels.Options);
+
+        Time.timeScale = 0f;
+    }
+
+    public void ShowCredits()
+    {
+        gameState = GameStates.CreditsState;
+
+        UIManager.Instance.DisplayCursor();
+        UIManager.Instance.SetPanels(UIManager.Panels.Credits);
 
         Time.timeScale = 0f;
     }
